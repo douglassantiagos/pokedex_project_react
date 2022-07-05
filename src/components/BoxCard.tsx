@@ -32,8 +32,8 @@ export function BoxCard({ onPokemonData }: BoxCardProps) {
                 h='180' 
                 justifyContent='center' 
                 bgImage="./pokeballBg.svg" 
-                bgRepeat='no-repeat' 
                 bgPosition='center'
+                bgRepeat='no-repeat'
                 bgSize='cover'
               >
                 <Image 
