@@ -26,7 +26,7 @@ export function BoxCard({ onPokemonData }: BoxCardProps) {
                 <Text textAlign='start' pr='2' fontSize='smaller' fontWeight='medium'>{formattedID(data.data.id)}</Text>
               </HStack>
               
-              <Flex 
+              <Flex
                 m='auto' 
                 w='200' 
                 h='180' 
