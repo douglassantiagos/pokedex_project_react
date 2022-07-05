@@ -11,7 +11,7 @@ export function BoxCard({ onPokemonData }: BoxCardProps) {
       {onPokemonData.map((data) => {
         return (
           <button>
-            <Stack key={data.data.id} direction='column' minW='250' minH='280' bg='yellow.400' borderRadius='16' p='2' >
+            <Stack key={data.data.id} direction='column' minW='250' minH='280' bg='yellow.400' borderRadius='16' p='2' shadow='md'>
               <HStack justify='space-between'>
                 <Text fontSize='sm' color='white' fontWeight='normal' bg='whiteAlpha.300' w='auto' borderRadius='20' p='1' pl='4' pr='4' >
                   {data.data.types.map(item => {
