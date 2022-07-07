@@ -1,26 +1,48 @@
-import { Box, Button, Flex, HStack, Text } from "@chakra-ui/react";
+import { Box, VStack, Text, Stack, Flex, Button, Image } from "@chakra-ui/react";
 import { SmallCloseIcon } from '@chakra-ui/icons'
-import { NavLink } from "./NavLink";
 
-interface BoxCardProps {
-  onPokemonType: () => void;
-}
+export function Sidebar({ handleClickCallback, onListTypeNames, ...rest }) {
 
-export function Sidebar({ onPokemonType }: BoxCardProps) {
   return (
-    <Box as='aside' w='22%' borderRightWidth={1} borderColor='gray.100'>
-      {onPokemonType.map(data => {
-        return (
-          <HStack key={data.data.name} spacing='8' align='center' mb='6'>
-            <SmallCloseIcon />
-
-            <Text fontWeight='bold' >
-              {data.data.name.charAt(0).toUpperCase() + 
-              (data.data.name).slice(1)}
+    <Box as='aside' w='18%' borderRightWidth={1} borderColor='gray.100'>     
+      <Stack spacing='4' align='start'>
+        <Button
+          onClick={() => handleClickCallback('All')}
+          style={{ 
+            display: 'flex',
+            alignItems: 'center',
+          }}
+          bg='none'
+          p='0'
+          _hover={{ color: 'blue.500'}}
+          _active={{ color: 'orange.400'}}
+          {...rest}
+        >
+          <Image src='../pokebolaS.png' w='5' h='5' />
+      
+          <Text ml='5'>All</Text>
+        </Button>      
+        {onListTypeNames.map((name, index) => (
+          <Button
+            key={index}
+            onClick={() => handleClickCallback(name)}
+            style={{ 
+              display: 'flex',
+              alignItems: 'center',
+            }}
+            bg='none'
+            p='0'
+            _hover={{ color: 'blue.400'}}
+            {...rest}
+          >
+            <Image src='../pokebolaP.png' w='5' h='5' />
+        
+            <Text ml='5'>
+              {name.charAt(0).toUpperCase() + (name).slice(1)}
             </Text>
-          </HStack>
-        )
-      })}
+          </Button>        
+        ))}
+      </Stack>
     </Box>
   )
 }
