@@ -18,7 +18,7 @@ export function Sidebar({ handleClickCallback, onListTypeNames, ...rest }) {
           _active={{ color: 'orange.400'}}
           {...rest}
         >
-          <Image src='../pokebolaS.png' w='5' h='5' />
+          <Image src='../pokebolaA.png' w='6' h='6' />
       
           <Text ml='5'>All</Text>
         </Button>      
@@ -35,9 +35,9 @@ export function Sidebar({ handleClickCallback, onListTypeNames, ...rest }) {
             _hover={{ color: 'blue.400'}}
             {...rest}
           >
-            <Image src='../pokebolaP.png' w='5' h='5' />
+            <Image src='../pokebolaS.png' w='5' h='5' />
         
-            <Text ml='5'>
+            <Text ml='5' fontWeight='hairline'>
               {name.charAt(0).toUpperCase() + (name).slice(1)}
             </Text>
           </Button>        

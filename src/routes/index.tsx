@@ -8,7 +8,7 @@ export async function getPokemon(pokemon) {
 }
 
 export async function getAllPokemons() {
-  const response = await fetch(`${urlMainApi}pokemon?limit=9&offset=0`);
+  const response = await fetch(`${urlMainApi}pokemon?limit=12&offset=0`);
   return await response.json()
 }
 

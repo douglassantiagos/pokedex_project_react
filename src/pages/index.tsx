@@ -20,7 +20,6 @@ export default function Home() {
   const [listTypeNames, setListTypeNames] = useState([]); 
   const [typeSelected, setTypeSelected] = useState("All");
 
-
   async function selectPokemon(pokemon) {
     const toArray = [];
 
@@ -175,12 +174,12 @@ export default function Home() {
             <Sidebar
               handleClickCallback={handleClickCallback}
               onListTypeNames={listTypeNames}
-              onClick={() => window.scrollTo(0, 0)}
+              // onClick={() => window.scrollTo(0, 0)}
             />
 
             <Flex direction='column' justify='center'>
               <Flex mb='10'>
-                <Image src='../pokebolaS.png' w='5' h='5' mr='4' />                
+                <Image src='../pokebolaA.png' w='6' h='6' mr='4' />                
                 <Text mr='1' fontWeight='bold'>
                   {pokemonsToShow.length}
                 </Text>
