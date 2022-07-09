@@ -1,20 +1,20 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Grid, Flex, Text, Image} from "@chakra-ui/react";
 
-import { api } from "../services/api";
-import { BoxCard } from "../components/BoxCard";
+import { Header } from "../components/Header";
 import { SearchInput } from "../components/SearchInput";
 import { Loading } from "../components/Loading";
-import { Header } from "../components/Header";
-import { Sidebar } from "../components/Siderbar";
+import { Sidebar } from "../components/Sidebar";
+import { PokemonCard } from "../components/PokemonCard";
 import { Footer } from "../components/Footer";
-import { getAllPokemons, getAllTypeData, getPokemon, getTypeData } from "../routes";
+import { getAllPokemons, getAllSpeciesData, getAllTypeData, getPokemon, getTypeData } from "../services";
 
 export default function Home() {
   const [pokemon, setPokemon] = useState("");
   const [pokemonData, setPokemonData] = useState([]);
   const [isLoadingData, setIsLoadingData] = useState(true);
   
+  const [listColorsEachSpeciesData, setListColorsEachSpeciesData ] = useState([])
   const [pokemonsToShow, setPokemonsToShow] = useState([])
   const [pokemonsTypeSelectedData, setPokemonsTypeSelectedData] = useState([])
   const [listTypeNames, setListTypeNames] = useState([]); 
@@ -27,8 +27,34 @@ export default function Home() {
 
     toArray.push(response)
     setPokemonData(toArray)
-  }
+  }  
 
+  // useEffect(() => {
+  //   async function fetchPokemonSpeciesData() {
+      
+  //     const apiSpeciesData = await getAllSpeciesData();
+      
+  //     // recebendo a url de cada tipo
+  //     const promisesAllSpeciesData = apiSpeciesData.results.map(
+  //       (specie) => getTypeData(specie.url)
+  //     );
+      
+  //     //espera todas as promises de "promisesAllSpeciesData" e recebe na variavel
+  //     const allSpeciesData = await Promise.all(promisesAllSpeciesData);        
+
+  //     const listColorSpeciesData = allSpeciesData.map(
+  //       (specie) => specie.color.name
+  //     )
+
+  //     setListColorsEachSpeciesData(listColorSpeciesData)
+
+  //     const promesesEachPokemonColorData = allSpeciesData.map((specie) => getTypeData(specie.color.url))
+
+      
+  //   }
+
+  //   fetchPokemonSpeciesData()
+  // }, [])
   
   useEffect(() => {
     async function fetchPokemonData() {
@@ -48,7 +74,7 @@ export default function Home() {
           name: pokemon.name,
           image: pokemon.sprites.other['official-artwork'].front_default,
           types: pokemon.types,
-        }
+        }        
       })
 
       setPokemonData([...pokemonData, ...listAllPokemonsData]);
@@ -129,7 +155,7 @@ export default function Home() {
     setTypeSelected(name);
   }, [])
   
-  console.log('X TypeSelected: ', typeSelected);
+  // console.log('X TypeSelected: ', typeSelected);
 
   function handleChange(props) {
     setPokemon(props.target.value.toLowerCase());
@@ -167,33 +193,36 @@ export default function Home() {
         bgSize='cover'
       >
         { isLoadingData ? 
+
           <Flex justify='center' align='center' m="auto" h='80vh' w='100%' maxW={1230}>
             <Loading />
           </Flex> :
+
           <Flex justify='space-between' mt='8' mx="auto" p="4" w='100%' maxW={1230}>
             <Sidebar
               handleClickCallback={handleClickCallback}
               onListTypeNames={listTypeNames}
-              // onClick={() => window.scrollTo(0, 0)}
+              selected={typeSelected}
             />
 
             <Flex direction='column' justify='center'>
-              <Flex mb='10'>
+              <Flex mb='8'>
                 <Image src='../pokebolaA.png' w='6' h='6' mr='4' />                
                 <Text mr='1' fontWeight='bold'>
-                  {pokemonsToShow.length}
-                </Text>
-                <Text fontWeight='bold'>
-                  Pokémons
-                  {/* {typeSelected.charAt(0).toUpperCase() + 
-                  (typeSelected).slice(1)} */}
+                  {pokemonsToShow.length} Pokémons
                 </Text>
               </Flex>
 
               <Grid gap={8} alignItems='flex-start' templateColumns={'repeat(3, 1fr)'}>
-                <BoxCard 
-                  onPokemonData={pokemonsToShow}
-                /> 
+                { pokemonsToShow.map(item => {
+                  return (                    
+                    <PokemonCard
+                      key={item.id}
+                      onPokemonData={item}
+                      onTypeSelected={typeSelected}
+                    />                    
+                  )
+                }) }
               </Grid>
             </Flex>
           </Flex>

@@ -1,5 +1,3 @@
-import { api } from "../services/api";
-
 const urlMainApi = "https://pokeapi.co/api/v2/";
 
 export async function getPokemon(pokemon) {
@@ -19,5 +17,10 @@ export async function getAllTypeData() {
 
 export async function getTypeData(url) {
   const response = await fetch(url);
+  return await response.json();
+}
+
+export async function getAllSpeciesData(pokemonID) {
+  const response = await fetch(`${urlMainApi}pokemon-species/${pokemonID}`)
   return await response.json();
 }
