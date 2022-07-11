@@ -1,20 +1,21 @@
 import { useEffect, useState } from "react";
-import { Button, Flex, HStack, Image, Stack, Text, useDisclosure } from "@chakra-ui/react";
-import { motion } from "framer-motion"
+import { Button, Flex, HStack, Image, Stack, Text, useDisclosure, Link } from "@chakra-ui/react";
+import { AnimatePresence, motion } from "framer-motion"
 
 import { formattedID } from "../utils/formattedID";
 import { typeColors } from "../utils/typeColors";
-import { ModalDetailsPokemons } from "./ModalDetailsPokemons";
+import Modal from "./Modal";
 
 export type ColorsData = {
   primary: string;
 }
 
-export function PokemonCard({ onPokemonData, onTypeSelected, ...rest }) {
+export function PokemonCard({ onPokemonData }) {  
+
   const [colors, setColors] = useState<ColorsData>({} as ColorsData)
   const [allTypesData, setAllTypesData] = useState([])
-
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  
+  const [selectedId, setSelectedId] = useState(null)
 
   async function getTypesNameData() {      
     const promisesTypesData = await onPokemonData.types.map((item) => item.type.name); 
@@ -54,8 +55,15 @@ export function PokemonCard({ onPokemonData, onTypeSelected, ...rest }) {
   };
 
   return (
-    <>         
-      <motion.button onClick={onOpen} variants={container} initial="hidden" animate="visible" whileHover={{ scale: 1.1 }}>
+    <>      
+      <motion.button 
+        layoutId={`card-container-${onPokemonData.id}`} 
+        onClick={() => setSelectedId(onPokemonData.id)}
+        variants={container} 
+        initial="hidden" 
+        animate="visible" 
+        whileHover={{ scale: 1.1 }} 
+      >
         <Stack direction='column' minW='290' minH='300' bg={colors.primary} borderRadius='16' p='2' shadow='md'>
           <HStack justify='space-between'>
             <Flex>
@@ -64,14 +72,16 @@ export function PokemonCard({ onPokemonData, onTypeSelected, ...rest }) {
                 (allTypesData[0] + " ").slice(1)}           
               </Text>
               {allTypesData[1] === undefined ? null :
-                <Text fontSize='sm' color='white' fontWeight='normal' ml='1' bg={allTypesData[1] === 'undefined' ? null : 'whiteAlpha.300'} w='auto' borderRadius='20' p='1' pl='4' pr='4' >   
+                <Text fontSize='sm' color='white' fontWeight='normal' ml='1' bg={allTypesData[1] === 'undefined' ? null : 'whiteAlpha.300'} w='auto' borderRadius='20' p='1' px='4'>   
                   {(allTypesData[1] + " ").charAt(0).toUpperCase() + 
                   (allTypesData[1] + " ").slice(1)}         
                 </Text>            
               }
             </Flex>
 
-            <Text textAlign='start' pr='2' fontSize='smaller' fontWeight='medium'>{formattedID(onPokemonData.id)}</Text>
+            <Text textAlign='start' pr='2' fontSize='smaller' fontWeight='medium'>
+              {formattedID(onPokemonData.id)}
+            </Text>
           </HStack>
           
           <Flex
@@ -101,7 +111,13 @@ export function PokemonCard({ onPokemonData, onTypeSelected, ...rest }) {
         </Stack>
       </motion.button>
 
-      <ModalDetailsPokemons isOpen={isOpen} onClose={onClose} />
+      <AnimatePresence>
+        {selectedId && (
+          <motion.button layoutId={selectedId} onClick={() => setSelectedId(null)}>
+            <Modal data={onPokemonData} onType={allTypesData} />
+          </motion.button>
+        )}
+      </AnimatePresence>
     </>
   )
 }

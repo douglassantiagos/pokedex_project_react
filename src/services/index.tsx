@@ -1,3 +1,5 @@
+import axios from "axios";
+
 const urlMainApi = "https://pokeapi.co/api/v2/";
 
 export async function getPokemon(pokemon) {

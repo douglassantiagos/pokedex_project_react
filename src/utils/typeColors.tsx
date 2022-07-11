@@ -14,7 +14,7 @@ export function typeColors(type) {
     } else if (type[0] === 'rock') {
         primary = 'gray.400'
     } else if (type[0] === 'bug') {
-        primary = 'green.200'
+        primary = 'green.300'
     } else if (type[0] === 'ghost') {
         primary = 'purple.300'
     } else if (type[0] === 'steel') {
@@ -30,11 +30,11 @@ export function typeColors(type) {
     } else if (type[0] === 'psychic') {
         primary = 'purple.200'
     } else if (type[0] === 'ice') {
-        primary = 'cyan.200'
+        primary = 'cyan.300'
     } else if (type[0] === 'dragon') {
         primary = 'orange'
     } else if (type[0] === 'dark') {
-        primary = 'blue.500'
+        primary = 'blue.600'
     } else if (type[0] === 'fairy') {
         primary = 'pink.300'
     }

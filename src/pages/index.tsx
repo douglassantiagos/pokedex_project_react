@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Grid, Flex, Text, Image} from "@chakra-ui/react";
+import { Grid, Flex, Text, Image, Link} from "@chakra-ui/react";
+import { AnimatePresence } from "framer-motion";
 
 import { Header } from "../components/Header";
 import { SearchInput } from "../components/SearchInput";
@@ -7,7 +8,9 @@ import { Loading } from "../components/Loading";
 import { Sidebar } from "../components/Sidebar";
 import { PokemonCard } from "../components/PokemonCard";
 import { Footer } from "../components/Footer";
-import { getAllPokemons, getAllSpeciesData, getAllTypeData, getPokemon, getTypeData } from "../services";
+import { getAllPokemons, getAllTypeData, getPokemon, getTypeData } from "../services";
+import { useRouter } from "next/router";
+import Head from "next/head";
 
 export default function Home() {
   const [pokemon, setPokemon] = useState("");
@@ -20,6 +23,7 @@ export default function Home() {
   const [listTypeNames, setListTypeNames] = useState([]); 
   const [typeSelected, setTypeSelected] = useState("All");
 
+
   async function selectPokemon(pokemon) {
     const toArray = [];
 
@@ -27,34 +31,7 @@ export default function Home() {
 
     toArray.push(response)
     setPokemonData(toArray)
-  }  
-
-  // useEffect(() => {
-  //   async function fetchPokemonSpeciesData() {
-      
-  //     const apiSpeciesData = await getAllSpeciesData();
-      
-  //     // recebendo a url de cada tipo
-  //     const promisesAllSpeciesData = apiSpeciesData.results.map(
-  //       (specie) => getTypeData(specie.url)
-  //     );
-      
-  //     //espera todas as promises de "promisesAllSpeciesData" e recebe na variavel
-  //     const allSpeciesData = await Promise.all(promisesAllSpeciesData);        
-
-  //     const listColorSpeciesData = allSpeciesData.map(
-  //       (specie) => specie.color.name
-  //     )
-
-  //     setListColorsEachSpeciesData(listColorSpeciesData)
-
-  //     const promesesEachPokemonColorData = allSpeciesData.map((specie) => getTypeData(specie.color.url))
-
-      
-  //   }
-
-  //   fetchPokemonSpeciesData()
-  // }, [])
+  }
   
   useEffect(() => {
     async function fetchPokemonData() {
@@ -74,6 +51,9 @@ export default function Home() {
           name: pokemon.name,
           image: pokemon.sprites.other['official-artwork'].front_default,
           types: pokemon.types,
+          height: pokemon.height,
+          weight: pokemon.weight,
+          // ability: pokemon.abilities
         }        
       })
 
@@ -129,6 +109,8 @@ export default function Home() {
           name: pokemon.name,
           image: pokemon.sprites.other['official-artwork'].front_default,
           types: pokemon.types,
+          height: pokemon.height,
+          weight: pokemon.weight,
         }
       }));
 
@@ -171,65 +153,69 @@ export default function Home() {
   }
 
   return (
-    <Flex direction='column' w='100%' h='100vh'>
-      <Header />
+    <>    
+      <Head>
+        <title>Pokedex</title>
+      </Head>
 
-      <SearchInput 
-        onHandleSubmit={handleSubmit} 
-        onHandleChange={handleChange} 
-      />
+      <Flex direction='column' w='100%' h='100vh'>
+        <Header />
 
-      <Flex 
-        direction="column" 
-        align='center' 
-        justify='center' 
-        mx="auto"        
-        w='100%' 
-        mb='10' 
-        maxW={1230} 
-        bgImage="./pokeballBg.svg" 
-        bgRepeat='no-repeat' 
-        bgPosition='center'
-        bgSize='cover'
-      >
-        { isLoadingData ? 
+        <SearchInput 
+          onHandleSubmit={handleSubmit} 
+          onHandleChange={handleChange} 
+        />
 
-          <Flex justify='center' align='center' m="auto" h='80vh' w='100%' maxW={1230}>
-            <Loading />
-          </Flex> :
+        <Flex 
+          direction="column" 
+          align='center' 
+          justify='center' 
+          mx="auto"        
+          w='100%' 
+          mb='10' 
+          maxW={1230} 
+          bgImage="./pokeballBg.svg" 
+          bgRepeat='no-repeat' 
+          bgPosition='center'
+          bgSize='cover'
+        >
+          { isLoadingData ? 
 
-          <Flex justify='space-between' mt='8' mx="auto" p="4" w='100%' maxW={1230}>
-            <Sidebar
-              handleClickCallback={handleClickCallback}
-              onListTypeNames={listTypeNames}
-              selected={typeSelected}
-            />
+            <Flex justify='center' align='center' m="auto" h='80vh' w='100%' maxW={1230}>
+              <Loading />
+            </Flex> :
 
-            <Flex direction='column' justify='center'>
-              <Flex mb='8'>
-                <Image src='../pokebolaA.png' w='6' h='6' mr='4' />                
-                <Text mr='1' fontWeight='bold'>
-                  {pokemonsToShow.length} Pokémons
-                </Text>
+            <Flex justify='space-between' mt='8' mx="auto" p="4" w='100%' maxW={1230}>
+              <Sidebar
+                handleClickCallback={handleClickCallback}
+                onListTypeNames={listTypeNames}
+                selected={typeSelected}
+              />
+
+              <Flex direction='column' justify='center'>
+                <Flex mb='8'>
+                  <Image src='../pokebolaA.png' w='6' h='6' mr='4' />                
+                  <Text mr='1' fontWeight='bold'>
+                    {pokemonsToShow.length} Pokémons
+                  </Text>
+                </Flex>
+
+                <Grid gap={8} alignItems='flex-start' templateColumns={'repeat(3, 1fr)'}>
+                  { pokemonsToShow.map(item => {
+                    return (
+                      <PokemonCard                      
+                        onPokemonData={item}
+                      />                           
+                    )
+                  }) }
+                </Grid>
               </Flex>
-
-              <Grid gap={8} alignItems='flex-start' templateColumns={'repeat(3, 1fr)'}>
-                { pokemonsToShow.map(item => {
-                  return (                    
-                    <PokemonCard
-                      key={item.id}
-                      onPokemonData={item}
-                      onTypeSelected={typeSelected}
-                    />                    
-                  )
-                }) }
-              </Grid>
             </Flex>
-          </Flex>
-        }           
-      </Flex>
+          }           
+        </Flex>
 
-      <Footer />
-    </Flex>
+        <Footer />
+      </Flex>
+    </>
   )
 }
